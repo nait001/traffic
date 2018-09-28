@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 13, 2018 at 01:27 AM
+-- Generation Time: Sep 28, 2018 at 09:57 PM
 -- Server version: 10.1.32-MariaDB
 -- PHP Version: 7.2.5
 
@@ -44,6 +44,7 @@ CREATE TABLE `admin` (
 INSERT INTO `admin` (`username`, `password`, `fname`, `mname`, `lname`, `level`) VALUES
 ('admin', 'd82494f05d6917ba02f7aaa29689ccb444bb73f20380876cb05d1f37537b7892', 'Admin', 'Gen', 'General Admin', 1),
 ('bonbon', '049d36c1a6b4cf8411ff9e13e0d375d1668f9c66827841c4842b7e9f42586843', 'Christian', 'De la cruz', 'Gasper', 3),
+('testuser', '0918a12659e9514d4385fd88274d91f2d5e33f014d90e82c458f3149f67505d3', 'test user', 'test user', 'testuser', 1),
 ('traffic', '9238fc1664e7f0507100d9313810f4c1a4bdc1fa11f2bd670798a8a3250e2fbb', 'John froi', 'Adera', 'Dejaresco', 2);
 
 -- --------------------------------------------------------
@@ -86,10 +87,15 @@ CREATE TABLE `penalty` (
 --
 
 INSERT INTO `penalty` (`pen_id`, `vio_id`, `penalty`, `offense`) VALUES
-(9, 4, '1231', 'Offense 1'),
-(10, 4, '1231', 'Offense 7'),
-(11, 5, '1131', 'Offense 5'),
-(12, 6, '5000', 'Offense 7');
+(9, 4, '500', 'Offense 1'),
+(10, 4, '1000', 'Offense 2'),
+(11, 5, '500', 'Offense 1'),
+(12, 6, '1000', 'Offense 1'),
+(13, 4, '1500', 'Offense 3'),
+(14, 5, '1500', 'Offense 2'),
+(15, 5, '3000', 'Offense 3'),
+(16, 6, '2000', 'Offense 2'),
+(17, 6, '4000', 'Offense 3');
 
 -- --------------------------------------------------------
 
@@ -108,9 +114,9 @@ CREATE TABLE `violation` (
 --
 
 INSERT INTO `violation` (`vio_id`, `violation`, `no_offense`) VALUES
-(4, 'qqq', 123),
-(5, 'asdasd', 11),
-(6, 'test', 1234);
+(4, 'Reckless Driving', 3),
+(5, 'No Helmet', 3),
+(6, 'Drunk Driving', 3);
 
 -- --------------------------------------------------------
 
@@ -126,27 +132,17 @@ CREATE TABLE `violator` (
   `address` varchar(255) NOT NULL,
   `bday` varchar(255) NOT NULL,
   `pic` varchar(255) NOT NULL,
-  `ctc` int(12) NOT NULL,
-  `owner` varchar(255) NOT NULL,
-  `date_apprehend` date NOT NULL,
-  `endorser_id` int(15) NOT NULL,
-  `impound` varchar(255) NOT NULL,
-  `chassis_no` varchar(255) NOT NULL,
-  `engine_no` varchar(255) NOT NULL,
-  `date_release` date NOT NULL,
-  `receipt_no` varchar(255) NOT NULL,
-  `status` int(1) NOT NULL,
-  `remarks` int(1) NOT NULL,
-  `noted_by` varchar(255) NOT NULL,
-  `gender` varchar(10) NOT NULL
+  `gender` varchar(10) NOT NULL,
+  `noted_by` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `violator`
 --
 
-INSERT INTO `violator` (`v_id`, `fname`, `mname`, `lname`, `address`, `bday`, `pic`, `ctc`, `owner`, `date_apprehend`, `endorser_id`, `impound`, `chassis_no`, `engine_no`, `date_release`, `receipt_no`, `status`, `remarks`, `noted_by`, `gender`) VALUES
-(1, 'qweqweqwe', 'asdsa', 'asdsad', 'qweqwe', '2018-09-13', '5b0fc400-a10c-47f2-9888-94a60a000006.jpg', 22222, 'qweqwe', '2018-09-13', 6, 'dqweqwe', 'qweqw', 'qweqwe', '2018-09-13', '123123213', 2, 1, '123123asdasd', 'Male');
+INSERT INTO `violator` (`v_id`, `fname`, `mname`, `lname`, `address`, `bday`, `pic`, `gender`, `noted_by`) VALUES
+(5, 'Christian', 'De la Cruz', 'Gasper', 'Municipal Subd, Sagay City', '1994-06-06', 'download.jpg', 'Male', 'Laiza Layague Javier'),
+(6, 'Laiza', 'Layague', 'Javier', 'San Agustin, Sagay city', '1998-11-10', '15894878_397329440603874_3237484684571525350_n.jpg', 'Female', 'Christian Gasper');
 
 -- --------------------------------------------------------
 
@@ -157,17 +153,27 @@ INSERT INTO `violator` (`v_id`, `fname`, `mname`, `lname`, `address`, `bday`, `p
 CREATE TABLE `violator_offense` (
   `violator_offense_id` int(11) NOT NULL,
   `v_id` int(11) NOT NULL,
-  `pen_id` int(11) NOT NULL
+  `pen_id` int(11) NOT NULL,
+  `date_apprehend` date DEFAULT NULL,
+  `remarks` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `date_released` date DEFAULT NULL,
+  `ctc` varchar(255) DEFAULT NULL,
+  `owner` varchar(255) DEFAULT NULL,
+  `endorser_id` int(11) DEFAULT NULL,
+  `impound` varchar(255) DEFAULT NULL,
+  `chassis_no` varchar(255) DEFAULT NULL,
+  `engine_no` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `violator_offense`
 --
 
-INSERT INTO `violator_offense` (`violator_offense_id`, `v_id`, `pen_id`) VALUES
-(30, 1, 9),
-(31, 1, 10),
-(32, 1, 11);
+INSERT INTO `violator_offense` (`violator_offense_id`, `v_id`, `pen_id`, `date_apprehend`, `remarks`, `status`, `date_released`, `ctc`, `owner`, `endorser_id`, `impound`, `chassis_no`, `engine_no`) VALUES
+(1, 5, 9, '2018-09-24', 'Released', 'Settled', '2018-09-29', '135512', 'Laiza', 7, 'Mustang', 'BA-1342', 'BA-2123'),
+(2, 5, 11, '2018-09-29', 'Not Released', 'Not Settled', NULL, '135512', 'Christian', 6, 'Ferrari', 'FE-4123', 'FE-1236'),
+(3, 6, 11, '2018-09-12', 'Released', 'Settled', '2018-09-18', '113341', 'Bonbon', 7, 'Civic', 'CI-1231', 'CI-3921');
 
 --
 -- Indexes for dumped tables
@@ -204,8 +210,7 @@ ALTER TABLE `violation`
 --
 ALTER TABLE `violator`
   ADD PRIMARY KEY (`v_id`),
-  ADD UNIQUE KEY `ctc` (`ctc`),
-  ADD KEY `endorser_id` (`endorser_id`);
+  ADD UNIQUE KEY `fname` (`fname`,`mname`,`lname`);
 
 --
 -- Indexes for table `violator_offense`
@@ -213,7 +218,8 @@ ALTER TABLE `violator`
 ALTER TABLE `violator_offense`
   ADD PRIMARY KEY (`violator_offense_id`),
   ADD KEY `v_id` (`v_id`),
-  ADD KEY `pen_id` (`pen_id`);
+  ADD KEY `pen_id` (`pen_id`),
+  ADD KEY `endorser_id` (`endorser_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -229,7 +235,7 @@ ALTER TABLE `endorser`
 -- AUTO_INCREMENT for table `penalty`
 --
 ALTER TABLE `penalty`
-  MODIFY `pen_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `pen_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `violation`
@@ -241,13 +247,13 @@ ALTER TABLE `violation`
 -- AUTO_INCREMENT for table `violator`
 --
 ALTER TABLE `violator`
-  MODIFY `v_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `v_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `violator_offense`
 --
 ALTER TABLE `violator_offense`
-  MODIFY `violator_offense_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `violator_offense_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
@@ -260,17 +266,12 @@ ALTER TABLE `penalty`
   ADD CONSTRAINT `consViolation` FOREIGN KEY (`vio_id`) REFERENCES `violation` (`vio_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `violator`
---
-ALTER TABLE `violator`
-  ADD CONSTRAINT `consEndorser` FOREIGN KEY (`endorser_id`) REFERENCES `endorser` (`endorser_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
 -- Constraints for table `violator_offense`
 --
 ALTER TABLE `violator_offense`
+  ADD CONSTRAINT `endorser_id` FOREIGN KEY (`endorser_id`) REFERENCES `endorser` (`endorser_id`),
   ADD CONSTRAINT `pen_fk` FOREIGN KEY (`pen_id`) REFERENCES `penalty` (`pen_id`),
-  ADD CONSTRAINT `violator_fk` FOREIGN KEY (`v_id`) REFERENCES `violator` (`v_id`);
+  ADD CONSTRAINT `violator_fk` FOREIGN KEY (`v_id`) REFERENCES `violator` (`v_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
