@@ -91,7 +91,7 @@
 												  <input name="pic" type="file" accept="image/*" class="form-control" id="pic" required autofocus/>
 											  </div>
 											</div>
-										  <div class="form-group row">
+										  <!-- <div class="form-group row">
 											  <label for="ctc" class="control-label col-lg-2">CTC No.<span class="required">*</span>	</label>
 											  	<div class="col-lg-3">
 												  <input class="form-control" id="ctc" name="ctc"  type="number" min=0 required/>
@@ -113,7 +113,7 @@
 														</select>
 													</div>
 											  	</div>
-										  </div>
+										  </div> -->
 
 										  <div class="form-group row">
 											  <label for="fname" class="control-label col-lg-2">First Name <span class="required">*</span>	</label>
@@ -121,29 +121,31 @@
 												  <input class="form-control" id="fname" name="fname"  type="text" required/>
 											  </div>
 
-											  <div class="form-group ">
-												  <label for="impound" class="control-label col-lg-2">Impound Vehicle <span class="required">*</span>	</label>
-												  <div class="col-lg-3">
-													  <input class="form-control" id="impound" name="impound" type="text" required/>
-												  </div>
-											  </div>
-											  	
-										  </div>
-
-										  <div class="form-group row">
 											  <label for="mname" class="control-label col-lg-2">Middle Name <span class="required">*</span></label>
 											  <div class="col-lg-3">
 												  <input class="form-control " id="mname" type="text" name="mname" required />
 											  </div>
+
+											  <!-- <div class="form-group ">
+												  <label for="impound" class="control-label col-lg-2">Impound Vehicle <span class="required">*</span>	</label>
+												  <div class="col-lg-3">
+													  <input class="form-control" id="impound" name="impound" type="text" required/>
+												  </div>
+											  </div> -->
+											  	
+										  </div>
+
+										  <!-- <div class="form-group row"> -->
 											  
-											  <div class="form-group ">
+											  
+											  <!-- <div class="form-group ">
 												  <label for="chassis_no" class="control-label col-lg-2">C.R No. / Chassis No. <span class="required">*</span></label>
 												  <div class="col-lg-3">
 													  <input class="form-control " id="chassis_no" type="text" name="chassis_no" required />
 												  </div>
-											  </div>
+											  </div> -->
 
-										  </div>
+										  <!-- </div> -->
 
 										  <div class="form-group row">
 											  <label for="lname" class="control-label col-lg-2">Last Name <span class="required">*</span></label>
@@ -151,16 +153,6 @@
 												  <input class="form-control " id="lname" type="text" name="lname" required/>
 											  </div>
 
-											  <div class="form-group ">
-												  <label for="engine_no" class="control-label col-lg-2">O.R No. / Engine No. <span class="required">*</span></label>
-												  <div class="col-lg-3">
-													  <input class="form-control " id="engine_no" type="text" name="engine_no" required/>
-												  </div>
-											  </div>
-											  
-										  </div>
-
-										  <div class="form-group row">
 											  <label for="gender" class="control-label col-lg-2">Gender <span class="required">*</span></label>
 											  <div class="col-lg-3"> 
 												<select class="form-control" id="gender" name="gender" required>
@@ -170,9 +162,27 @@
 												</select>
 											  </div>
 
+											  <!-- <div class="form-group ">
+												  <label for="engine_no" class="control-label col-lg-2">O.R No. / Engine No. <span class="required">*</span></label>
+												  <div class="col-lg-3">
+													  <input class="form-control " id="engine_no" type="text" name="engine_no" required/>
+												  </div>
+											  </div> -->
+											  
+										  </div>
+
+										  <div class="form-group row">
+											  
+
 											  <label for="bday" class="control-label col-lg-2">Birth Date <span class="required">*</span></label>
 											  <div class="col-lg-3">
 												  <input class="form-control" type="date" id="bday" name="bday" required />
+											  </div>
+
+											  <label for="address" class="control-label col-lg-2">Address <span class="required">*</span>	</label>
+											  <div class="col-lg-3">
+												  <input class="form-control" id="address" name="address" type="text" required 	/>
+
 											  </div>
 
 											  <!-- <div class="form-group ">
@@ -184,38 +194,14 @@
 											  
 										  </div>
 
-										  <div class="form-group row">
-											  <label for="owner" class="control-label col-lg-2">Owner <span class="required">*</span></label>
-											  <div class="col-lg-3">
-												  <input class="form-control " id="owner" type="text" name="owner" required />
-											  </div>
 
-											  <div class="form-group ">
-													<label for="noted" class="control-label col-lg-2">Noted By:</label>
-													<div class="col-lg-3">
-													  <input class="form-control" type="text" id="noted" name="noted" />
-													</div>
-												</div>
 
-											  <!-- <div class="form-group ">
-												  <label for="receipt_no" class="control-label col-lg-2">Receipt No. <span class="required">*</span></label>
-												  <div class="col-lg-3">
-													  <input class="form-control" type="number" id="receipt_no" min=0 name="receipt_no" required />
-												  </div>
-											  </div> -->
+										  <!-- <div class="form-group row">
 											  
-										  </div>
-
-										  <div class="form-group row">
-											  <label for="address" class="control-label col-lg-2">Address <span class="required">*</span>	</label>
-											  <div class="col-lg-3">
-												  <input class="form-control" id="address" name="address" type="text" required 	/>
-
-											  </div>
 
 											  
 											  
-										  </div>
+										  </div> -->
 
 										  <div class="form-group row">
 
@@ -227,10 +213,6 @@
 												  </select>
 											  </div>
 
-											  
-										  </div>
-
-										  <div class="form-group row">
 											  <label for="offense_type" class="control-label col-lg-2">Offense <span class="required">*	</span>
 											  </label>
 											  <div class="col-lg-3">
@@ -238,8 +220,23 @@
 													  <option value="">Select Offense</option>
 												  </select>
 											  </div>
-											  	
+
 										  </div>
+
+  										  <div class="form-group row">
+
+												<label for="noted" class="control-label col-lg-2">Noted By:</label>
+												<div class="col-lg-3">
+												 	<input class="form-control" type="text" id="noted" name="noted" />
+												</div>
+
+											  
+										  </div>
+
+										 <!--  <div class="form-group row">
+											  
+											  	
+										  </div> -->
 
 										</div>
 									</div>
@@ -331,11 +328,6 @@
 			}
 		});
 	  $(function() {
-		$(".knob").knob({
-		  'draw': function() {
-			$(this.i).val(this.cv + '%')
-		  }
-		});
 		get_violation_penalties();
 	  });
 
@@ -350,29 +342,6 @@
 		});
 	  });
 
-	  //custom select box
-
-	  $(function() {
-		$('select.styled').customSelect();
-	  });
-
-	  /* ---------- Map ---------- */
-	  $(function() {
-		$('#map').vectorMap({
-		  map: 'world_mill_en',
-		  series: {
-			regions: [{
-			  values: gdpData,
-			  scale: ['#000', '#000'],
-			  normalizeFunction: 'polynomial'
-			}]
-		  },
-		  backgroundColor: '#eef3f7',
-		  onLabelShow: function(e, el, code) {
-			el.html(el.html() + ' (GDP - ' + gdpData[code] + ')');
-		  }
-		});
-	  });
 	</script>
 
 </body>

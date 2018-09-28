@@ -1,6 +1,6 @@
 <?php
 require_once '../config/config.php';
-$sql = "select p.pen_id, v.violation,p.penalty, p.offense from penalty as p inner join violation as v on v.vio_id=p.vio_id";
+$sql = "select p.pen_id, v.violation,p.penalty, p.offense from penalty as p inner join violation as v on v.vio_id=p.vio_id order by v.violation desc, p.penalty desc";
 $query = $theConnection->prepare($sql);
 $query->execute();
 $query->bind_result($id, $viol,$pen,$offense);

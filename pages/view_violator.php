@@ -13,9 +13,15 @@
 	$statuses = array();
 	$penalties = array();
 	$date_releases = array();
+	$ctcs = array();
+	$endorsers = array();
+	$owners = array();
+	$impounds = array();
+	$chassises = array();
+	$engines = array();
 	if(isset($_GET['violator_id'])){
 		$violator_id = $_GET['violator_id'];
-		$sql = "select v.gender, v.pic, v.ctc, v.fname, v.mname, v.lname, v.address, v.owner, v.bday, vio.violation, p.offense, e.fname, e.mname, e.lname, v.impound, v.chassis_no, v.engine_no, v.noted_by, vf.remarks, vf.date_apprehend, vf.status, p.penalty, vf.date_released from violator as v inner join endorser as e on e.endorser_id=v.endorser_id left join violator_offense as vf on vf.v_id = v.v_id left join penalty as p on p.pen_id = vf.pen_id left join violation as vio on vio.vio_id = p.vio_id where v.v_id=? order by vf.date_released asc";
+		$sql = "select v.gender, v.pic, vf.ctc, v.fname, v.mname, v.lname, v.address, vf.owner, v.bday, vio.violation, p.offense, e.fname, e.mname, e.lname, vf.impound, vf.chassis_no, vf.engine_no, v.noted_by, vf.remarks, vf.date_apprehend, vf.status, p.penalty, vf.date_released from violator as v left join violator_offense as vf on vf.v_id = v.v_id left join endorser as e on e.endorser_id=vf.endorser_id left join penalty as p on p.pen_id = vf.pen_id left join violation as vio on vio.vio_id = p.vio_id where v.v_id=? order by vf.date_released desc";
 		$query = $theConnection->prepare($sql) or die(mysqli_error($theConnection));
 		$query->bind_param('i', $violator_id);
 		$query->execute();
@@ -28,6 +34,12 @@
 			$statuses[] = $status;
 			$penalties[] = $penalty;
 			$date_releases[] = $date_release;
+			$ctcs[] = $ctc;
+			$endorsers[] = ucfirst($endorser_fname).' '.ucfirst($endorser_lname);
+			$owners[] = ucfirst($owner);
+			$impounds[] = $impound;
+			$chassises[] = $chassis_no;
+			$engines[] = $engine_no;
 		}
 		$query->close();
 		$dateN = date('Y');
@@ -56,9 +68,12 @@
 			height: 30px;
 			border-radius: 5px;
 		}
+		.form-control {
+			color: black !important;
+		}
 		@media screen and (min-width: 768px) {
 		  .modal-lg{
-		      width:1200px;
+		      width:1350px;
 		  }
 
 		  .modal-sm{
@@ -106,7 +121,7 @@
 				<div class="container">
 					<div class="row">
 					  	<div class="col-md-12">
-					    	<div class="panel panel-default">
+					    	<div class="panel panel-default" style="width: 1450px !important">
 					        	<div class="panel-body">
 					           		<div class="row">
 						              	<div class="col-xs-12 col-sm-2 text-center">
@@ -129,7 +144,7 @@
 					           			</div>
 					           		</div>
 					           		<div class="row col-lg-12 col-sm-12 col-md-12 col-xs-12">
-					           			<div class="bio-row">
+					           			<!-- <div class="bio-row">
 											<p><span>Owner </span>: <?php echo $owner; ?></p>
 										</div>
 										<div class="bio-row">
@@ -143,7 +158,7 @@
 										</div>
 										<div class="bio-row">
 											<p><span>O.R No. / Engine No. </span>: <?php echo $engine_no; ?></p>
-										</div>
+										</div> -->
 
 										<div class="pull-left row col-lg-12 col-md-12 col-sm-12">
 											<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -152,19 +167,28 @@
 				                            </span>
 												<?php 
 													$count = 0;
-													echo "<table class='table table-hover table-striped col-lg-12 col-md-12'>
+													echo "<table style='width: 1400px !important' class='table table-hover table-striped col-lg-12 col-md-12'>
 																<thead style='font-weight: bolder'>
 																	<tr>
-																		<td>Date Apprehend</td>
-																		<td>Violation</td>
-																		<td>Offense</td>
+																		<td>#</td>
+																		<td style='width:200px !important'>Date Apprehend</td>
+																		<td style='width:50px !important'>CTC</td>
+																		<td style='width:150px !important'>Violation</td>
+																		<td style='width:100px !important'>Owner</td>
+																		<td style='width:100px !important'>Offense</td>
 																		<td>Penalty</td>
-																		<td>Remarks</td>
-																		<td>Status</td>
-																		<td>Date Released</td>
+																		<td style='width:50px !important'>Vehicle</td>
+																		<td style='width:100px !important'>Chassis #</td>
+																		<td style='width:100px !important'>Engine #</td>
+																		<td style='width:120px !important'>Remarks</td>
+																		<td style='width:100px !important'>Status</td>
+																		<td style='width:150px !important'>Endorser</td>
+																		<td style='width:170px !important'>Date Released</td>
 																	</tr>
 																</thead><tbody>";
+													$no = 0;
 													foreach($violations as $vio) {
+														$no++;
 														if(!empty($date_appre[$count])){
 															$date_appre[$count] = date('F d, Y', strtotime($date_appre[$count]));
 														}
@@ -173,12 +197,19 @@
 														}
 														echo "
 																<tr>
+																	<td>$no</td>
 																	<td>$date_appre[$count]</td>
+																	<td>$ctcs[$count]</td>
 																	<td>$vio</td>
+																	<td>$owners[$count]</td>
 																	<td>$offenses[$count]</td>
 																	<td>$penalties[$count]</td>
+																	<td>$impounds[$count]</td>
+																	<td>$chassises[$count]</td>
+																	<td>$engines[$count]</td>
 																	<td>$remarks[$count]</td>
 																	<td>$statuses[$count]</td>
+																	<td>$endorsers[$count]</td>
 																	<td>$date_releases[$count]</td>
 																</tr>
 															";
@@ -260,6 +291,36 @@
 									</div>
 								</div>
 							</div>
+							<div class="row">
+								<div class="form-horizontal">
+									<div class="col-lg-2" style="width: auto">
+										<label>CTC #</label>
+										<input class='form-control' type="text">
+									</div>
+									<div class="col-lg-1" style="width: 12%">
+										<label>Owner</label>
+										<input class='form-control' type="text">
+									</div>
+									<div class="col-lg-1" style="width: 12%">
+										<label>Impound</label>
+										<input class='form-control' type="text">
+									</div>
+									<div class="col-lg-2" style="width: 12%">
+										<label>Chassis #</label>
+										<input class='form-control' type="text">
+									</div>
+									<div class='col-lg-2' style='width:14%'>
+										<label>Endorser</label>
+										<select class='form-control'>
+											<option value=''>Please Select</option>
+										</select>
+									</div>
+									<div class="col-lg-2" style="width: 14%">
+										<label>Engine #</label>
+										<input class='form-control' type="text">
+									</div>
+								</div>
+							</div>
 						</div>
 						<div class="modal-footer">
 							<button type="reset" class="btn btn-danger" data-dismiss="modal">Cancel</button>
@@ -288,6 +349,7 @@
 		  }
 		});
         populate_form();
+        get_endorsers();
 	  });
 
     function populate_form() {
@@ -300,13 +362,36 @@
             success: function(e) {
             	var c =0;
                 var res = JSON.parse(e);
+                var cc = 1;
                 $("#violation_form_body").empty();
                 $.each(res, function(i, v) {
                 	rem_select(v.remarks, 'rem_selects'+c);
                 	status_select(v.status, 'status_selects'+c);
+                	if(v.date_apprehend == null) {
+                		v.date_apprehend = "";
+                	}
+                	if(v.impound == null) {
+                		v.impound = "";
+                	}
+                	if(v.date_released == null) {
+                		v.date_released = "";
+                	}
+                	if(v.owner == null) {
+                		v.owner = "";
+                	}
+                	if(v.chassis_no == null) {
+                		v.chassis_no = "";
+                	}
+                	if(v.engine_no == null) {
+                		v.engine_no = "";
+                	}
+                	if(v.ctc == null) {
+                		v.ctc = "";
+                	}
                     $("#violation_form_body").append(
                         `<input type='hidden' name='vf_id[]' value='${v.violator_offense_id}'>
                         <div class='row'>
+                        	${cc}.
 	                    	<div class='form-horizontal'>
 
 	                    		<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
@@ -353,9 +438,50 @@
 	                            </div>
 
 	                        </div>
-	                     </div>`
+	                     </div>
+
+	                     <div class="row">
+							<div class="form-horizontal">
+								<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="width: auto">
+									<label>CTC #</label>
+									<input class='form-control' name="ctc[]" value='${v.ctc}' type="text">
+								</div>
+								
+								<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" style="width: 12%">
+									<label>Owner</label>
+									<input class='form-control' name='owner[]' value='${v.owner}' type="text">
+								</div>
+								
+								<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" style="width: 12%">
+									<label>Impound</label>
+									<input class='form-control' name="impound[]" value='${v.impound}' type="text">
+								</div>
+								
+								<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="width: 12%">
+									<label>Chassis #</label>
+									<input class='form-control' name="chassis[]" value='${v.chassis_no}' type="text">
+								</div>
+								
+								<div class='col-lg-2 col-md-2 col-sm-2 col-xs-2' style='width:14%'>
+									<label>Endorser</label>
+									<select class='form-control ends' name="endorser[]" id="ends_selects${c}">
+										<option value=''>Please Select</option>
+									</select>
+								</div>
+								
+								<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="width: 14%">
+									<label>Engine #</label>
+									<input class='form-control' type="text" value='${v.engine_no}' name="engine[]">
+								</div>
+							</div>
+						</div>
+
+	                     `
                     );
+						endorser_select(v.endorser_id, "ends_selects"+c, c);
+                	
                     c++;
+                    cc++;
                 });
             }
         });
@@ -365,6 +491,48 @@
     	window.setTimeout(function(){
     		$("#"+i).val(remark);
     	}, 500);
+    	
+    }
+
+    function get_endorsers() {
+    	$.ajax({
+    		type: "GET",
+    		url: "process/get_endorsers_select.php",
+    		success: function(e) {
+    			var res = JSON.parse(e);
+    			$(".ends").empty();
+    			$(".ends").append('<option value="">Please Select</option>');
+    			$.each(res, function(i, v) {
+    				$(".ends").append(
+    					`<option value='${v.endorser_id}'>${v.fname} ${v.lname}</option>`
+    				);
+    			});
+    		}
+    	});
+    }
+
+    function endorser_select(endorser_id, i, ind) {
+		$.ajax({
+    		type: "GET",
+    		url: "process/get_endorsers_select.php",
+    		success: function(e) {
+    			var res = JSON.parse(e);
+    			$(".ends").eq(ind).attr('id', i).empty();
+    			$(".ends").eq(ind).attr('id', i).append('<option value="">Please Select</option>');
+    			$.each(res, function(i, v) {
+    				if(v.endorser_id == endorser_id) {
+    					$(".ends").eq(ind).attr('id', i).append(
+	    					`<option value='${v.endorser_id}' selected>${v.fname} ${v.lname}</option>`
+	    				);
+	    				// console.log(v.endorser_id);
+    				} else {
+    					$(".ends").eq(ind).attr('id', i).append(
+	    					`<option value='${v.endorser_id}'>${v.fname} ${v.lname}</option>`
+	    				);
+    				}
+    			});
+    		}
+    	});
     	
     }
 
@@ -396,40 +564,6 @@
             }
         });
 	});
-	  //carousel
-	  $(document).ready(function() {
-		$("#owl-slider").owlCarousel({
-		  navigation: true,
-		  slideSpeed: 300,
-		  paginationSpeed: 400,
-		  singleItem: true
-
-		});
-	  });
-
-	  //custom select box
-
-	  $(function() {
-		$('select.styled').customSelect();
-	  });
-
-	  /* ---------- Map ---------- */
-	  $(function() {
-		$('#map').vectorMap({
-		  map: 'world_mill_en',
-		  series: {
-			regions: [{
-			  values: gdpData,
-			  scale: ['#000', '#000'],
-			  normalizeFunction: 'polynomial'
-			}]
-		  },
-		  backgroundColor: '#eef3f7',
-		  onLabelShow: function(e, el, code) {
-			el.html(el.html() + ' (GDP - ' + gdpData[code] + ')');
-		  }
-		});
-	  });
 	</script>
 
 </body>

@@ -34,3 +34,13 @@
   <link href="../css/select2.min.css" rel="stylesheet">
   <link href="../css/jquery.dataTables.min.css" />
   <link href="../css/dataTables.bootstrap.min.css" rel="stylesheet">
+
+
+  <link href="../css/bootstrap.min.css" rel="stylesheet" media="print">
+  <link href="../css/bootstrap-theme.css" rel="stylesheet" media="print">
+  <link href="../css/elegant-icons-style.css" rel="stylesheet" media="print">
+  <link href="../css/font-awesome.min.css" rel="stylesheet" media="print">
+  <!-- owl carousel -->
+  <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css" media="print">
+  <link href="../css/style.css" rel="stylesheet" media="print">
+  <link href="../css/style-responsive.css" rel="stylesheet" media="print">

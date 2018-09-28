@@ -57,10 +57,7 @@
 							<input type="text" placeholder="Search.." id="search" class="col-lg-3 pull-right" style="margin: 0px 10px 5px 0px;border-radius: 5px;height: 40px;">
 							<table class="table table-striped table-hover" id="table_vio">
 								<tr>
-									<th>CTC No.</th>
 									<th><i class="icon_profile"></i> Driver</th>
-									<th><i class="icon_profile"></i> Owner</th>
-									<th><i class="icon_profile"></i> Endorser</th>
 									<?php if($_SESSION['level'] != 3): ?>
 										<th><i class="icon_cogs"></i> Action</th>
 									<?php endif; ?>
@@ -97,6 +94,7 @@
 				url:'process/get_recs.php',
 				data:{},
 				success:(e)=>{
+					$("#tbodz_rec").empty();
 					$('#tbodz_rec').html(e);
 					
 				}
