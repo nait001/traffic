@@ -13,9 +13,15 @@
 	$statuses = array();
 	$penalties = array();
 	$date_releases = array();
+	$ctcs = array();
+	$endorsers = array();
+	$owners = array();
+	$impounds = array();
+	$chassises = array();
+	$engines = array();
 	if(isset($_GET['violator_id'])){
 		$violator_id = $_GET['violator_id'];
-		$sql = "select v.gender, v.pic, v.ctc, v.fname, v.mname, v.lname, v.address, v.owner, v.bday, vio.violation, p.offense, e.fname, e.mname, e.lname, v.impound, v.chassis_no, v.engine_no, v.noted_by, vf.remarks, vf.date_apprehend, vf.status, p.penalty, vf.date_released from violator as v inner join endorser as e on e.endorser_id=v.endorser_id left join violator_offense as vf on vf.v_id = v.v_id left join penalty as p on p.pen_id = vf.pen_id left join violation as vio on vio.vio_id = p.vio_id where v.v_id=? order by vf.date_released asc";
+		$sql = "select v.gender, v.pic, vf.ctc, v.fname, v.mname, v.lname, v.address, vf.owner, v.bday, vio.violation, p.offense, e.fname, e.mname, e.lname, vf.impound, vf.chassis_no, vf.engine_no, v.noted_by, vf.remarks, vf.date_apprehend, vf.status, p.penalty, vf.date_released from violator as v left join violator_offense as vf on vf.v_id = v.v_id left join endorser as e on e.endorser_id=vf.endorser_id left join penalty as p on p.pen_id = vf.pen_id left join violation as vio on vio.vio_id = p.vio_id where v.v_id=? order by vf.date_released desc";
 		$query = $theConnection->prepare($sql) or die(mysqli_error($theConnection));
 		$query->bind_param('i', $violator_id);
 		$query->execute();
@@ -28,6 +34,12 @@
 			$statuses[] = $status;
 			$penalties[] = $penalty;
 			$date_releases[] = $date_release;
+			$ctcs[] = $ctc;
+			$endorsers[] = ucfirst($endorser_fname).' '.ucfirst($endorser_lname);
+			$owners[] = ucfirst($owner);
+			$impounds[] = $impound;
+			$chassises[] = $chassis_no;
+			$engines[] = $engine_no;
 		}
 		$query->close();
 		$dateN = date('Y');
@@ -37,91 +49,83 @@
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<head>
+
+<head> 
 	<title>Traffic Management System</title>
-  	<style>
-        .no_margin{
-        	margin:0px;
-        }
-       
-		@media print {
-		 	
- 			@page {
-	            size: auto;   
-	            margin:0mm !important;  
-	        }
-	        body {
-	            background-color: white !important;
-				border: transparent !important;
-				margin:0px !important;
-	       }
-	       .bio-row{
-				color: black !important;
-			}
-			.panel-body {
-				border: transparent !important;
-			}
-			.pr {
-				float:right !important;
-			}
+  <?php include "../includes/css.php" ?>
+
+
+	<style media="print">
+		body{
+	 		margin: 0mm 0mm 0mm 0mm !important;
 		}
-	</style>
-	<link href="../css/bootstrap.min.css" rel="stylesheet" media="print">
-	<link href="../css/bootstrap-theme.css" rel="stylesheet" media="print">
-	<link href="../css/elegant-icons-style.css" rel="stylesheet" media="print">
-	<link href="../css/font-awesome.min.css" rel="stylesheet" media="print">
-	<!-- owl carousel -->
-	<link rel="stylesheet" href="../css/owl.carousel.css" type="text/css" media="print">
-	<link href="../css/style.css" rel="stylesheet" media="print">
-	<link href="../css/style-responsive.css" rel="stylesheet" media="print">
-
-	<link href="../css/bootstrap.min.css" rel="stylesheet">
-	<link href="../css/bootstrap-theme.css" rel="stylesheet">
-	<link href="../css/elegant-icons-style.css" rel="stylesheet">
-	<link href="../css/font-awesome.min.css" rel="stylesheet">
-	<!-- owl carousel -->
-	<link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
-	<link href="../css/style.css" rel="stylesheet">
-	<link href="../css/style-responsive.css" rel="stylesheet">
-
+		#headers{
+			width: auto; 
+			border: 0; 
+			margin: 0 0 0 0 !important; 
+			margin-top: 0mm !important;
+			padding: 0; 
+			float: none !important; 
+		}
+</style>
+<style>
+@media screen {
+    header.onlyprint{
+        display: none; 
+    }
+}
+</style>
 </head>
-<body>
 
+<body>
+  <!-- container section start -->
+  <section id="container" class="">
+
+	
+	<!--sidebar end-->
+
+ 
+
+
+
+
+
+
+
+	<!--main content start-->
 		<!-- page start-->
-		<div class="row" style="top:0px !important;">
-			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-				<img src="../img/phil.png" style="margin:auto;height:90px;width: 90px;" class="center-block img-circle img-responsive">
-			</div>
-			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-				<p class='text-center' style="margin:0px">Republic of the Philippines</p>
-				<p class='text-center' style="margin:0px">Sagay National Police</p>
-				<p class='text-center' style="margin:0px">Sagay City Negros Occidental</p>
-				<p class='text-center' style="margin:0px">422-95872</p>
-			</div>
-			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-				<img src="../img/pnp.jpeg" style="margin:auto;height:90px;width: 90px;" class="center-block img-circle img-responsive">
-			</div>
-		</div>
-		<div class="row" id="violator_info" style="margin-left: 60px !important;">
+		
+		<div id="form_print">
+		<div class="row" id="violator_info">
 			<div class="col-lg-12">
+				<header class="onlyprint" id="headers">
+				    <div class="row col-lg-12">
+				        <table class='table' >
+				        	<tr>
+				        		<td><img src="../img/phil.png" style="height: 100px;width: 100px;"></td>
+				        		<td class="text-center" style='width:90%'>Sagay Police Station<br>Philippines<br>094912839491</td>
+				        		<td> <img src="../img/pnp.jpeg" style="height: 90px;width: 90px;"></td>
+				        	</tr>
+				        </table>
+				    </div>
+				</header>
 			<!-- profile -->
-				<div class="container" style="position: sticky !important;">
-					
+				<div class="container">
 					<div class="row">
 					  	<div class="col-md-12">
-					    	<div class="panel">
+					    	<div class="panel panel-default" style="width: 1450px !important">
 					        	<div class="panel-body">
 					           		<div class="row">
 						              	<div class="col-xs-2 col-sm-2 text-center">
 						                	<img src="imgs/<?php echo $pic; ?>" alt="image" class="center-block img-circle img-responsive">
 						             	</div>
 						              <!--/col-->
-						              	<div class="col-xs-10 col-sm-10">
-							                <h3 class='no_margin'><?php echo ucfirst($violator_fname." ".$violator_mname." ".$violator_lname); ?></h3>
-							                <p class='no_margin'><strong>Birthdate: </strong><?php echo date("F d, Y", strtotime($bday));  ?></p>
-							                <p class='no_margin'><strong>Age: </strong> <?php echo $age; ?> </p>
-							                <p class='no_margin'><strong>Gender: </strong> <?php echo $gender; ?> </p>
-							                <p class='no_margin'><strong>Address: </strong> <?php echo $address; ?> </p>
+						              	<div class="col-xs-12 col-sm-10">
+							                <h3><?php echo ucfirst($violator_fname." ".$violator_mname." ".$violator_lname); ?></h3>
+							                <p><strong>Birthdate: </strong><?php echo date("F d, Y", strtotime($bday));  ?></p>
+							                <p><strong>Age: </strong> <?php echo $age; ?> </p>
+							                <p><strong>Gender: </strong> <?php echo $gender; ?> </p>
+							                <p><strong>Address: </strong> <?php echo $address; ?> </p>
 						              	</div>
 					             	 <!--/col-->  
 					           		</div>
@@ -132,40 +136,34 @@
 					           			</div>
 					           		</div>
 					           		<div class="row col-lg-12 col-sm-12 col-md-12 col-xs-12">
-					           			<div class="bio-row">
-											<p><span>Owner </span>: <?php echo $owner; ?></p>
-										</div>
-										<div class="bio-row">
-											<p><span>Endorser </span>: <?php echo ucfirst($endorser_fname." ".$endorser_mname." ".$endorser_lname); ?></p>
-										</div>
-										<div class="bio-row">
-											<p><span>Impounded Vehicle </span>: <?php echo $impound; ?></p>
-										</div>
-										<div class="bio-row">
-											<p><span>C.R No. / Chassis No. </span>: <?php echo $chassis_no; ?></p>
-										</div>
-										<div class="bio-row">
-											<p><span>O.R No. / Engine No. </span>: <?php echo $engine_no; ?></p>
-										</div>
-
 										<div class="pull-left row col-lg-12 col-md-12 col-sm-12">
 											<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-											<span>Violation & Offense</span>
+											<span>Violation & Offense
+				                            </span>
 												<?php 
 													$count = 0;
-													echo "<table class='table table-hover table-striped col-lg-12 col-md-12'>
+													echo "<table style='width: 1400px !important' class='table table-hover table-striped col-lg-12 col-md-12'>
 																<thead style='font-weight: bolder'>
 																	<tr>
-																		<td>Date Apprehend</td>
-																		<td>Violation</td>
-																		<td>Offense</td>
+																		<td>#</td>
+																		<td style='width:200px !important'>Date Apprehend</td>
+																		<td style='width:50px !important'>CTC</td>
+																		<td style='width:150px !important'>Violation</td>
+																		<td style='width:100px !important'>Owner</td>
+																		<td style='width:100px !important'>Offense</td>
 																		<td>Penalty</td>
-																		<td>Remarks</td>
-																		<td>Status</td>
-																		<td>Date Released</td>
+																		<td style='width:50px !important'>Vehicle</td>
+																		<td style='width:100px !important'>Chassis #</td>
+																		<td style='width:100px !important'>Engine #</td>
+																		<td style='width:120px !important'>Remarks</td>
+																		<td style='width:100px !important'>Status</td>
+																		<td style='width:150px !important'>Endorser</td>
+																		<td style='width:170px !important'>Date Released</td>
 																	</tr>
 																</thead><tbody>";
+													$no = 0;
 													foreach($violations as $vio) {
+														$no++;
 														if(!empty($date_appre[$count])){
 															$date_appre[$count] = date('F d, Y', strtotime($date_appre[$count]));
 														}
@@ -174,12 +172,19 @@
 														}
 														echo "
 																<tr>
+																	<td>$no</td>
 																	<td>$date_appre[$count]</td>
+																	<td>$ctcs[$count]</td>
 																	<td>$vio</td>
+																	<td>$owners[$count]</td>
 																	<td>$offenses[$count]</td>
 																	<td>$penalties[$count]</td>
+																	<td>$impounds[$count]</td>
+																	<td>$chassises[$count]</td>
+																	<td>$engines[$count]</td>
 																	<td>$remarks[$count]</td>
 																	<td>$statuses[$count]</td>
+																	<td>$endorsers[$count]</td>
 																	<td>$date_releases[$count]</td>
 																</tr>
 															";
@@ -191,11 +196,11 @@
 											</div>
 										</div>
 
+										<div class="row" style="float:right !important;">
+											<p><span>Noted By </span>: <?php echo $noted_by; ?></p>
+										</div>
 
 					           		</div>
-					           		<div class="row pr col-lg-12">
-										<p><span>Noted By </span>: <?php echo $noted_by; ?></p>
-									</div>
 					           <!--/row-->
 					        	</div>
 					        <!--/panel-body-->
@@ -203,21 +208,50 @@
 					     <!--/panel-->
 					  	</div>
 					</div>
-				<!-- </div> -->
+				</div>
 			</div>
 		</div>
+	</div>
 
 		<!-- page end-->
+		</section>
+	
+  <!-- container section start -->
+
+  <!-- javascripts -->
+  <?php include "../includes/js.php"; ?>
+	<script>
+		$(function() {
+			print_data();
+		})
+		function print_data(){
+         //Get the HTML of div
+            var divElements = $("#for_print").html();
+            //Get the HTML of whole page
+            var oldPage = document.body.innerHTML;
+
+            var head = document.getElementById('headers').innerHTML;
+
+            //Reset the page's HTML with div's HTML only
+            document.body.innerHTML = 
+              "<html><head><title></title></head><body>" + head +
+              divElements + "</body>";
+
+            //Print Page
+            
+            	window.print();	
+            
+            
+
+            //Restore orignal HTML
+            document.body.innerHTML = oldPage;
+
+            window.setTimeout(function() {
+            	window.close();
+            }, 500)
+    }
+	</script>
 
 </body>
-  <?php include "../includes/js.php"; ?>
-  <script>
-  	
-  	$(function(){
-  		window.print();
-  		window.setTimeout(function(){
-  			window.close();
-  		}, 500);
-  	});
-  </script>
-</html
+
+</html>

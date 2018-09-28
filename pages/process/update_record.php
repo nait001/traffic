@@ -1,20 +1,20 @@
 <?php
 session_start();
 require_once '../config/config.php';
-$ctc = $_POST['ctc'];
+// $ctc = $_POST['ctc'];
 $fname = $_POST['fname'];
 $mname = $_POST['mname'];
 $lname = $_POST['lname'];
 $gender = $_POST['gender'];
-$owner = $_POST['owner'];
+// $owner = $_POST['owner'];
 $address = $_POST['address'];
 $bday = $_POST['bday'];
 $offense_type = $_POST['offense_type'];
 
-$endorser = $_POST['endorser'];
-$impound = $_POST['impound'];
-$chassis_no  = $_POST['chassis_no'];
-$engine_no  = $_POST['engine_no'];
+// $endorser = $_POST['endorser'];
+// $impound = $_POST['impound'];
+// $chassis_no  = $_POST['chassis_no'];
+// $engine_no  = $_POST['engine_no'];
 
 $noted = isset($_POST['noted']) ? $_POST['noted'] : '';
 $id = $_POST['violator_id'];
@@ -22,16 +22,16 @@ $stats = array();
 if(isset($_FILES['pic']['name']) && !empty($_FILES['pic']['name'])){
 	$pic_name = $_FILES['pic']['name'];
 	$pic_tmp = $_FILES['pic']['tmp_name'];
-	$sql = "update violator set fname=?, mname=?, lname=?, address=?, bday=?, pic=?, ctc=?, owner=?, endorser_id=?, impound=?, chassis_no=?, engine_no=?, noted_by=?, gender=? where v_id=?";
+	$sql = "update violator set fname=?, mname=?, lname=?, address=?, bday=?, pic=?, gender=?, noted_by=? where v_id=?";
 	$query = $theConnection->prepare($sql) or die(mysqli_error($theConnection));
-	$query->bind_param('ssssssisisssssi', $fname, $mname, $lname, $address, $bday, $pic_name, $ctc, $owner, $endorser, $impound, $chassis_no, $engine_no, $noted, $gender, $id);
+	$query->bind_param('ssssssssi', $fname, $mname, $lname, $address, $bday, $pic_name, $gender, $noted, $id);
 	move_uploaded_file($pic_tmp, "../imgs/".$pic_name);
 }
 else {
 	$_SESSION['success'] = "From else";
-	$sql = "update violator set fname=?, mname=?, lname=?, address=?, bday=?, ctc=?, owner=?, endorser_id=?, impound=?, chassis_no=?, engine_no=?, gender = ?, noted_by=? where v_id=?";
+	$sql = "update violator set fname=?, mname=?, lname=?, address=?, bday=?, gender = ?, noted_by=? where v_id=?";
 	$query = $theConnection->prepare($sql) or die(mysqli_error($theConnection));
-	$query->bind_param('sssssisisssssi', $fname, $mname, $lname, $address, $bday, $ctc, $owner, $endorser, $impound, $chassis_no, $engine_no, $gender, $noted, $id);
+	$query->bind_param('sssssssi', $fname, $mname, $lname, $address, $bday, $gender, $noted, $id);
 }
 if($query->execute()){
 	$sql2 = "insert into violator_offense (pen_id, v_id) values (?,?)";

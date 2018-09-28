@@ -4,12 +4,12 @@ $search_key = "%".$_GET['search_key']."%";
 session_start();
 $dateN = date('Y');
 $age = 0;
-$sql = "select distinct v.gender, v.v_id,v.fname,v.mname,v.lname,v.address,v.bday, v.pic, v.ctc, v.owner, e.fname, e.lname, e.mname from violator as v inner join endorser as e on e.endorser_id = v.endorser_id inner join violator_offense as vf on vf.v_id = v.v_id inner join penalty as p on p.pen_id = vf.pen_id inner join violation as vio on vio.vio_id = p.vio_id where v.fname LIKE ? or v.mname LIKE ? or v.lname LIKE ? or owner LIKE ? or e.fname like ? or e.mname like ? or e.lname like ? or vio.violation like ?";
+$sql = "select distinct v.gender, v.v_id,v.fname,v.mname,v.lname,v.address,v.bday, v.pic from violator as v inner join violator_offense as vf on vf.v_id = v.v_id left join endorser as e on e.endorser_id = vf.endorser_id inner join penalty as p on p.pen_id = vf.pen_id inner join violation as vio on vio.vio_id = p.vio_id where v.fname LIKE ? or v.mname LIKE ? or v.lname LIKE ? or owner LIKE ? or e.fname like ? or e.mname like ? or e.lname like ? or vio.violation like ?";
 $query = $theConnection->prepare($sql) or die(mysqli_error($theConnection));
 $query->bind_param('ssssssss', $search_key, $search_key, $search_key, $search_key, $search_key, $search_key, $search_key, $search_key );
 $query->execute();
 $query->store_result();
-$query->bind_result($gender, $idzz,$fname,$mname,$lname,$address,$bday, $pic, $ctc, $owner, $endorser_fname, $endorser_mname, $endorser_lname);
+$query->bind_result($gender, $idzz,$fname,$mname,$lname,$address,$bday, $pic);
 if($query->num_rows() > 0) {
 	while($query->fetch()){
 		$bday = date('Y',strtotime($bday)); 
@@ -22,20 +22,23 @@ if($query->num_rows() > 0) {
 		$query1->store_result();
 		$count = $query1->num_rows();
 			echo "<tr>
-					<td>$ctc</td>
 					<td><a href='view_violator.php?violator_id=$idzz'>".ucfirst($fname)." ".ucfirst($mname)." ".ucfirst($lname)."</a><table>
 						<thead>
 							<tr>
+								<th>#</th>
 								<th>Date Apprehended</th>
 								<th>Violation</th>
 								<th>Offense</th>
 								<th>Penalty</th>
 								<th>Remarks</th>
+								<th>Status</th>
 								<th>Date Released</th>
 							</tr>
 						</thead>
 					";
+				$count = 0;
 		while($query1->fetch()) {
+			$count++;
 			if(!empty($date_apprehend)){
 				$date_apprehend = date('F d, Y', strtotime($date_apprehend));
 			}
@@ -43,17 +46,17 @@ if($query->num_rows() > 0) {
 				$date_released = date('F d, Y', strtotime($date_released));
 			}
 			echo "<tr>
+					<td>$count</td>
 					<td>$date_apprehend</td>
 					<td>$violation</td>
 					<td>$offense</td>
 					<td>$penalty</td>
 					<td>$remarks</td>
+					<td>$status</td>
 					<td>$date_released</td>
 				</tr>";
 		}
 					echo "</table></td>
-					<td>".ucfirst($owner)."</td>
-					<td>".ucfirst($endorser_fname)." ".ucfirst($endorser_mname)." ".ucfirst($endorser_lname)."</td>
 					<td><div class='btn-group'> 
 					<a class='btn btn-success' href='edit_violator.php?violator_id=$idzz'><i class='fa fa-edit'></i></a>
 					<a class='btn btn-danger' onclick='delete_record($idzz)' href='#'><i class='icon_close_alt2'></i></a>
@@ -67,19 +70,22 @@ if($query->num_rows() > 0) {
 					$query2->store_result();
 					$count = $query2->num_rows();
 			echo "<tr>
-					<td>$ctc</td>
 					<td><a href='view_violator.php?violator_id=$idzz'>".ucfirst($fname." ".$mname." ".$lname)."</a><table>
 					<thead>
 						<tr>
+							<th>#</th>
 							<th>Date Apprehended</th>
 							<th>Violation</th>
 							<th>Offense</th>
 							<th>Penalty</th>
 							<th>Remarks</th>
+							<th>Status</th>
 							<th>Date Released</th>
 						</tr>
 					</thead>";
+					$count = 0;
 			while($query2->fetch()) {
+				$count++;
 				if(!empty($date_apprehend)){
 					$date_apprehend = date('F d, Y', strtotime($date_apprehend));
 				}
@@ -87,17 +93,17 @@ if($query->num_rows() > 0) {
 					$date_released = date('F d, Y', strtotime($date_released));
 				}
 				echo "<tr>
+						<td>$count</td>
 						<td>$date_apprehend</td>
 						<td>$violation</td>
 						<td>$offense</td>
 						<td>$penalty</td>
 						<td>$remarks</td>
+						<td>$status</td>
 						<td>$date_released</td>
 					</tr>";
 			}
 					echo "</table></td>
-					<td>".ucfirst($owner)."</td>
-					<td>".ucfirst($endorser_fname." ".$endorser_mname." ".$endorser_lname)."</td>
 				</tr>";
 		}
 	}
