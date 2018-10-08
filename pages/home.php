@@ -99,12 +99,25 @@
 		</a>
 			<!--/.info-box-->
 		  </div>
-		  <!--/.col-->
-
-		 
-		  <!--/.col-->
-
 		</div>
+
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="col-lg-3">
+					<a href="process/print_reports.php?type=yearly" target="_blank" class="btn btn-md btn-primary fa fa-print"> Print Yearly</a>
+				</div>
+				<div class="col-lg-3">
+					<a href="process/print_reports.php?type=monthly" target="_blank" class="btn btn-md btn-primary fa fa-print"> Print Monthly</a>
+				</div>
+				<!-- <div class="col-lg-3">
+					<a href="process/print_reports.php?type=daily" target="_blank" class="btn btn-md btn-primary fa fa-print"> Print Daily</a>
+				</div>
+				<div class="col-lg-3">
+					<a href="process/print_reports.php?type=weekly" target="_blank" class="btn btn-md btn-primary fa fa-print"> Print Weekly</a>
+				</div> -->
+			</div>
+		</div>
+
 		<div class="row">
 			<div class="col-lg-12">
 				<strong>Violators Per Month</strong>

@@ -4,6 +4,19 @@ $search_key = "%".$_GET['search_key']."%";
 session_start();
 $dateN = date('Y');
 $age = 0;
+$search_vio = "";
+
+$sql_vio = "select count(*) from violation where violation like ?";
+$query_v = $theConnection->prepare($sql_vio);
+$query_v->bind_param('s', $search_key);
+$query_v->execute();
+$query_v->bind_result($count);
+$query_v->store_result();
+$query_v->fetch();
+if($count > 0) {
+	$search_vio = " and vio.violation like '".$search_key."'";
+}
+
 $sql = "select distinct v.gender, v.v_id,v.fname,v.mname,v.lname,v.address,v.bday, v.pic from violator as v inner join violator_offense as vf on vf.v_id = v.v_id left join endorser as e on e.endorser_id = vf.endorser_id inner join penalty as p on p.pen_id = vf.pen_id inner join violation as vio on vio.vio_id = p.vio_id where v.fname LIKE ? or v.mname LIKE ? or v.lname LIKE ? or owner LIKE ? or e.fname like ? or e.mname like ? or e.lname like ? or vio.violation like ?";
 $query = $theConnection->prepare($sql) or die(mysqli_error($theConnection));
 $query->bind_param('ssssssss', $search_key, $search_key, $search_key, $search_key, $search_key, $search_key, $search_key, $search_key );
@@ -15,8 +28,8 @@ if($query->num_rows() > 0) {
 		$bday = date('Y',strtotime($bday)); 
 		$age = $dateN - $bday;
 		if($_SESSION['level'] != 3) {
-		$sql_1 = "select p.offense, vio.violation, vf.remarks, vf.date_apprehend, vf.status, p.penalty, vf.date_released from violator as v left join violator_offense as vf on vf.v_id=v.v_id left join penalty as p on p.pen_id = vf.pen_id left join violation as vio on vio.vio_id = p.vio_id where vf.v_id = $idzz";
-		$query1 = $theConnection->prepare($sql_1);
+		$sql_1 = "select p.offense, vio.violation, vf.remarks, vf.date_apprehend, vf.status, p.penalty, vf.date_released from violator as v left join violator_offense as vf on vf.v_id=v.v_id left join penalty as p on p.pen_id = vf.pen_id left join violation as vio on vio.vio_id = p.vio_id where vf.v_id = $idzz $search_vio";
+		$query1 = $theConnection->prepare($sql_1) or die(mysqli_error($theConnection));
 		$query1->execute();
 		$query1->bind_result($offense, $violation, $remarks, $date_apprehend, $status, $penalty, $date_released);
 		$query1->store_result();
@@ -63,7 +76,7 @@ if($query->num_rows() > 0) {
 				  </div></td>
 				</tr>";
 		} else {                                                                                                         
-			$sql_2 = "select p.offense, vio.violation, vf.remarks, vf.date_apprehend, vf.status, p.penalty, vf.date_released from violator as v left join violator_offense as vf on vf.v_id=v.v_id left join penalty as p on p.pen_id = vf.pen_id left join violation as vio on vio.vio_id = p.vio_id where vf.v_id = $idzz";
+			$sql_2 = "select p.offense, vio.violation, vf.remarks, vf.date_apprehend, vf.status, p.penalty, vf.date_released from violator as v left join violator_offense as vf on vf.v_id=v.v_id left join penalty as p on p.pen_id = vf.pen_id left join violation as vio on vio.vio_id = p.vio_id where vf.v_id = $idzz $search_vio";
 					$query2 = $theConnection->prepare($sql_2);
 					$query2->execute();
 					$query2->bind_result($offense, $violation, $remarks, $date_apprehend, $status, $penalty, $date_released);
